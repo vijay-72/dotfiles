@@ -1,0 +1,32 @@
+# The main background color for the entire window
+Background = "#282828"
+
+# The text color for items not selected
+Base = "#ebdbb2"
+
+# The background color for the currently selected item
+Selected_Background = "#3c3836"
+
+# The text color for the currently selected item
+Selected = "#ebdbb2"
+
+# The color for the text you are typing (the prompt)
+Prompt = "#bdae93"
+
+# The color for highlights, like the fuzzy match characters
+Highlight = "#fabd2f"
+
+# The color for the info line (e.g., the number of results)
+Info = "#83a598"
+
+# The color for the search spinner
+Spinner = "#fabd2f"
+
+# The color for the cursor/pointer
+Pointer = "#83a598"
+
+# The color for markers, like the one indicating a selected item
+Marker = "#fe8019"
+
+# The color for the header line
+Header = "#665c54"
