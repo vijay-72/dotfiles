@@ -1,0 +1,11 @@
+packages:
+  darwin:
+    brews:
+      - zoxide
+      - fzf
+      - atuin
+      - eza
+      - fd
+      - mise
+      - neovim
+      - git

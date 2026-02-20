@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Color and stuff
+alias \
+  grep="grep --color=auto" \
+  diff="diff --color=auto" \
+  ccat="highlight --out-format=ansi" \
+  ip="ip -color=auto" \
+  ls="eza --icons -a --group-directories-first --grid" \
+  ll="eza --icons --long --header --group-directories-first  --no-filesize -a"
+
+alias \
+  vi="nvim"
+
+alias fetch="fastfetch --colors-block-range-start 9 --colors-block-width 3;"

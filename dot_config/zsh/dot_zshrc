@@ -1,0 +1,190 @@
+PROFILE_STARTUP=false
+
+if [[ "$PROFILE_STARTUP" == true ]]; then
+  zmodload zsh/zprof
+  PS4=$'%D{%M%S%.} %N:%i> '
+  exec 3>&2 2>$HOME/startlog.$$
+  setopt xtrace prompt_subst
+fi
+
+#------------------------------------------------------------------------------
+# FUNCTIONS
+#------------------------------------------------------------------------------
+
+# Compile multiple zsh files to bytecode for faster loading
+function zcompile-many() {
+  local f
+  for f; do zcompile -R -- "$f".zwc "$f"; done
+}
+
+
+#------------------------------------------------------------------------------
+# POWERLEVEL10K INSTANT PROMPT
+#------------------------------------------------------------------------------
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+#------------------------------------------------------------------------------
+# PLUGIN MANAGEMENT
+#------------------------------------------------------------------------------
+
+# Create plugin directory if it doesn't exist
+[[ -d $ZDOTDIR/plugins ]] || mkdir -p $ZDOTDIR/plugins
+
+if [[ ! -e $ZDOTDIR/plugins/zsh-syntax-highlighting ]]; then
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git $ZDOTDIR/plugins/zsh-syntax-highlighting 
+  zcompile-many $ZDOTDIR/plugins/zsh-syntax-highlighting/{zsh-syntax-highlighting.zsh,highlighters/*/*.zsh}
+fi
+
+if [[ ! -e $ZDOTDIR/plugins/zsh-autosuggestions ]]; then
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git $ZDOTDIR/plugins/zsh-autosuggestions
+  zcompile-many $ZDOTDIR/plugins/zsh-autosuggestions/{zsh-autosuggestions.zsh,src/**/*.zsh}
+fi
+
+if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZDOTDIR/plugins/powerlevel10k
+  make -C $ZDOTDIR/plugins/powerlevel10k pkg
+fi
+
+if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
+  git clone --depth=1 https://github.com/zsh-users/zsh-completions.git $ZDOTDIR/plugins/zsh-completions
+fi
+
+if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
+  git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab
+fi
+
+#------------------------------------------------------------------------------
+# HISTORY CONFIGURATION
+#------------------------------------------------------------------------------
+
+# Create history directory if it doesn't exist
+[[ -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh" ]] || mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+
+HISTSIZE=5000000
+SAVEHIST=5000000
+HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
+
+# History options
+setopt INC_APPEND_HISTORY     # Append to history immediately
+setopt HIST_IGNORE_SPACE      # Don't record commands that start with space
+setopt HIST_FIND_NO_DUPS      # Don't show duplicates when searching
+setopt HIST_IGNORE_ALL_DUPS   # Remove older duplicate entries
+setopt HIST_SAVE_NO_DUPS      # Don't write duplicates to history file
+setopt HIST_REDUCE_BLANKS     # Remove superfluous blanks from commands
+setopt SHARE_HISTORY          # Share history between different instances
+
+#------------------------------------------------------------------------------
+# COMPLETION CONFIGURATION (BEFORE COMPINIT)
+#------------------------------------------------------------------------------
+
+# Add completion paths from zsh-completions
+fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+
+# Load aliases
+[[ -f "$HOME/.config/shell/aliasrc" ]] && source "$HOME/.config/shell/aliasrc"
+
+# Configure completion styles BEFORE compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # Case-insensitive matching
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"    # Colored completion
+zstyle ':completion:*' menu no                             # No menu for completion
+zstyle ':fzf-tab:*' complete-common-prefix true
+
+
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:*' fzf-flags \
+  --height 70% \
+  --border \
+  --layout=reverse-list \
+  --color=fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f \
+  --color=info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54 \
+  --bind=tab:accept
+
+#------------------------------------------------------------------------------
+# INITIALIZE COMPLETION SYSTEM
+#------------------------------------------------------------------------------
+
+# Enable the "new" completion system (compsys).
+autoload -Uz compinit && compinit
+_comp_options+=(globdots)
+[[ $ZDOTDIR/.zcompdump.zwc -nt $ZDOTDIR/.zcompdump ]] || zcompile-many $ZDOTDIR/.zcompdump
+
+
+#------------------------------------------------------------------------------
+# KEYBINDINGS
+#------------------------------------------------------------------------------
+
+# Emacs keybinding mode
+bindkey -e
+
+# History search
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+#------------------------------------------------------------------------------
+# FZF CONFIGURATION
+#------------------------------------------------------------------------------
+
+# FZF default options
+export FZF_DEFAULT_OPTS='--height 70% --border --layout=reverse-list
+--color fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f
+--color info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54'
+
+# Use fd instead of find
+export FZF_DEFAULT_COMMAND="fd --follow --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+#------------------------------------------------------------------------------
+# PLUGINS AND TOOLS
+#------------------------------------------------------------------------------
+
+# Define plugin directory path
+plugin_dir="$ZDOTDIR/plugins"
+
+# zsh-autosuggestions configuration
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+# Initialize tools
+command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
+command -v fzf >/dev/null && source <(fzf --zsh)
+[[ -x "$HOME/.local/bin/mise" ]] && eval "$($HOME/.local/bin/mise activate zsh)"
+eval "$(atuin init zsh --disable-up-arrow)"
+# Load plugins in proper order
+
+[[ -f "$plugin_dir/fzf-tab/fzf-tab.plugin.zsh" ]] && \
+  source "$plugin_dir/fzf-tab/fzf-tab.plugin.zsh"
+
+[[ -f "$plugin_dir/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && \
+  source "$plugin_dir/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+[[ -f "$plugin_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
+  source "$plugin_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+[[ -f "$plugin_dir/powerlevel10k/powerlevel10k.zsh-theme" ]] && \
+  source "$plugin_dir/powerlevel10k/powerlevel10k.zsh-theme"
+
+#------------------------------------------------------------------------------
+# THEME CONFIGURATION
+#------------------------------------------------------------------------------
+
+# Load the appropriate Powerlevel10k configuration
+if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
+  [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
+else
+  [[ ! -f "$ZDOTDIR/.p10k-portable.zsh" ]] || source "$ZDOTDIR/.p10k-portable.zsh"
+fi
+
+# Cleanup
+unfunction zcompile-many
+
+
+if [[ "$PROFILE_STARTUP" == true ]]; then
+  unsetopt xtrace
+  exec 2>&3 3>&-; zprof > ~/zshprofile$(date +'%s')
+fi
