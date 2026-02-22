@@ -53,4 +53,5 @@ fi
 
 {{ if eq .chezmoi.os "darwin" }}
 export PATH="/opt/homebrew/bin:$PATH"
+export FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 {{ end }}
