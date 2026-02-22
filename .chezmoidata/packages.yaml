@@ -9,3 +9,4 @@ packages:
       - mise
       - neovim
       - git
+      - sesh
