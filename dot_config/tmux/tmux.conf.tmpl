@@ -39,9 +39,8 @@ set -g @tmux-dotbar-bg "default"
 set -g @tmux-dotbar-bold-status false
 set -g @tmux-dotbar-bold-current-window true
 set -g @tmux-dotbar-position top
-set -g @tmux-dotbar-left "false"
-set -g @tmux-dotbar-right "true"
-set -g @tmux-dotbar-status-right "#{?client_prefix,#[bg=#fabd2f fg=default] #S ,#[fg=#928374] #S }"
+set -g @tmux-dotbar-fg-prefix "#fabd2f"
+set -g @tmux-dotbar-session-position "right"
 
 if "test ! -d ~/.config/tmux/plugins/tpm" \
    "run 'git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm && ~/.config/tmux/plugins/tpm/bin/install_plugins'"
