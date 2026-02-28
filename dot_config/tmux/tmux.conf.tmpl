@@ -1,12 +1,15 @@
-set -g prefix `
+set -g prefix C-a
 unbind C-b
-bind ` send-prefix
+bind C-a send-prefix
+
 
 set -s escape-time 0
 
 set -g base-index 1
 set -g pane-base-index 1
 set -g renumber-windows on
+set -g mouse on
+
 
 
 set -g default-terminal "tmux-256color"
@@ -31,6 +34,12 @@ bind \\ split-window -h
 bind - split-window -v 
 unbind '"'
 unbind %
+
+bind C-p previous-window
+bind C-n next-window
+
+bind v copy-mode
+
 
 ## Plugins
 set -g @plugin 'vaaleyard/tmux-dotbar'
