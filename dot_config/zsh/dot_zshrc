@@ -97,13 +97,7 @@ zstyle ':fzf-tab:*' complete-common-prefix true
 
 
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-zstyle ':fzf-tab:*' fzf-flags \
-  --height 70% \
-  --border \
-  --layout=reverse-list \
-  --color=fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f \
-  --color=info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54 \
-  --bind=tab:accept
+zstyle ':fzf-tab:*' use-fzf-default-opts yes
 
 #------------------------------------------------------------------------------
 # INITIALIZE COMPLETION SYSTEM
@@ -131,14 +125,31 @@ bindkey '^n' history-search-forward
 #------------------------------------------------------------------------------
 
 # FZF default options
-export FZF_DEFAULT_OPTS='--height 70% --border --layout=reverse-list
---color fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f
---color info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54'
+_fzf_opts=(
+  --height 70%
+  --border
+  --layout=reverse
+  --color=bg+:#3c3836
+  --color=fg:#ebdbb2,fg+:#ebdbb2
+  --color=hl:#83a598,hl+:#fabd2f
+  --color=info:#a89984
+  --color=prompt:#fabd2f
+  --color=pointer:#fb4934
+  --color=marker:#8ec07c
+  --color=spinner:#8ec07c
+  --color=header:#928374
+  --color=border:#665c54
+)
+export FZF_DEFAULT_OPTS="${(j: :)_fzf_opts}"
+unset _fzf_opts
 
 # Use fd instead of find
 export FZF_DEFAULT_COMMAND="fd --follow --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_OPTS="
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
 #------------------------------------------------------------------------------
 # PLUGINS AND TOOLS
