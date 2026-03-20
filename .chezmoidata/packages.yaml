@@ -11,3 +11,4 @@ packages:
       - git
       - sesh
       - bat
+      - vivid

@@ -82,7 +82,7 @@ setopt SHARE_HISTORY          # Share history between different instances
 #------------------------------------------------------------------------------
 # COMPLETION CONFIGURATION (BEFORE COMPINIT)
 #------------------------------------------------------------------------------
-
+export LS_COLORS="$(vivid generate gruvbox-dark-hard)"
 # Add completion paths from zsh-completions
 fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 
@@ -98,6 +98,7 @@ zstyle ':fzf-tab:*' complete-common-prefix true
 
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:*' fzf-flags --height=70% # Aloxaf/fzf-tab/issues/493, to force height
 
 #------------------------------------------------------------------------------
 # INITIALIZE COMPLETION SYSTEM
