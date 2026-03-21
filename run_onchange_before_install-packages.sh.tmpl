@@ -1,6 +1,5 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-
 if ! command -v brew >/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
@@ -10,5 +9,18 @@ brew bundle --file=/dev/stdin <<BUNDLE
 brew {{ . | quote }}
 {{ end -}}
 BUNDLE
+
+{{ else if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+if ! command -v paru >/dev/null; then
+  sudo pacman -S --needed base-devel git
+  git clone https://aur.archlinux.org/paru.git /tmp/paru
+  cd /tmp/paru && makepkg -si --noconfirm
+fi
+
+paru -S --needed --noconfirm \
+{{ range .packages.linux.paru -}}
+  {{ . }} \
+{{ end }}
 
 {{ end -}}

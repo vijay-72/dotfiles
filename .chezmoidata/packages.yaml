@@ -12,3 +12,19 @@ packages:
       - sesh
       - bat
       - vivid
+      - usage
+
+  linux:
+    paru:
+      - zoxide
+      - fzf
+      - atuin
+      - eza
+      - fd
+      - mise
+      - neovim
+      - git
+      - sesh
+      - bat
+      - vivid
+      - usage
