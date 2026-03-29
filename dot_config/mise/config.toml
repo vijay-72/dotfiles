@@ -1,0 +1,16 @@
+[tools]
+lua-language-server = "latest"
+node = "22"
+"npm:@vtsls/language-server" = "latest"
+"npm:tsx" = "latest"
+"npm:typescript" = "latest"
+pnpm = "latest"
+shfmt = "latest"
+stylua = "latest"
+
+[settings]
+hook_env.chpwd_only = true
+not_found_auto_install = false
+
+[settings.npm]
+package_manager = "pnpm"
