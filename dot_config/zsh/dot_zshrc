@@ -100,6 +100,18 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 zstyle ':fzf-tab:*' fzf-flags --height=70% # Aloxaf/fzf-tab/issues/493, to force height
 
+# --- Build host list from ~/.ssh/config ---
+h=()
+if [[ -r ~/.ssh/config ]]; then
+  h=($h ${(s: :)${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}})
+fi
+if [[ $#h -gt 0 ]]; then
+  for cmd in ssh slogin scp sftp rsync; do
+    zstyle ":completion:*:$cmd:*" hosts $h
+  done
+fi
+
+zstyle ':completion:*:(ssh|scp|sftp|rsync|slogin|ssh-copy-id):*:users' ignored-patterns '*'
 #------------------------------------------------------------------------------
 # INITIALIZE COMPLETION SYSTEM
 #------------------------------------------------------------------------------
