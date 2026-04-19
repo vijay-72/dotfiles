@@ -37,7 +37,7 @@ fi
 [[ -d $ZDOTDIR/plugins ]] || mkdir -p $ZDOTDIR/plugins
 
 if [[ ! -e $ZDOTDIR/plugins/zsh-syntax-highlighting ]]; then
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git $ZDOTDIR/plugins/zsh-syntax-highlighting 
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git $ZDOTDIR/plugins/zsh-syntax-highlighting
   zcompile-many $ZDOTDIR/plugins/zsh-syntax-highlighting/{zsh-syntax-highlighting.zsh,highlighters/*/*.zsh}
 fi
 
@@ -114,12 +114,13 @@ _comp_options+=(globdots)
 # KEYBINDINGS
 #------------------------------------------------------------------------------
 
-# Emacs keybinding mode
+#emacs mode
 bindkey -e
 
-# History search
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
+# open current command in neovim
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
 
 #------------------------------------------------------------------------------
 # FZF CONFIGURATION
