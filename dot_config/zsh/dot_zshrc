@@ -165,6 +165,37 @@ export FZF_CTRL_T_OPTS="
   --preview 'bat -n --color=always {}'
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
+
+function sesh-sessions() {
+  {
+    exec </dev/tty
+    exec <&1
+    local session
+    session=$(
+      sesh list --icons | fzf \
+        --height=100% --no-border --layout=reverse --ansi --no-sort \
+        --prompt='⚡  ' \
+        --header='^a all  ^t tmux  ^g configs  ^x zoxide  ^f find  ^d kill' \
+        --bind='tab:down,btab:up' \
+        --bind='ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
+        --bind='ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
+        --bind='ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+        --bind='ctrl-x:change-prompt(📁  )+reload(sesh list -z --icons)' \
+        --bind='ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .git -E .Trash . ~)' \
+        --bind='ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+        --bind='ctrl-b:abort' \
+        --preview='sesh preview {}' \
+        --preview-window='right:55%'
+    )
+    zle reset-prompt > /dev/null 2>&1 || true
+    [[ -z "$session" ]] && return
+    sesh connect "$session"
+  }
+}
+zle -N sesh-sessions
+bindkey -M emacs '\es' sesh-sessions
+bindkey -M vicmd '\es' sesh-sessions
+bindkey -M viins '\es' sesh-sessions
 #------------------------------------------------------------------------------
 # PLUGINS AND TOOLS
 #------------------------------------------------------------------------------
