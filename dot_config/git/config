@@ -6,7 +6,17 @@
 [pull]
 	rebase = true
 [rerere]
-	enabled = false
+	enabled = true
+	autoupdate = true
+
+[diff]
+	algorithm = histogram
+	renames = true
+	colorMoved = default
+
+[fetch]
+	prune = true
+	pruneTags = true
 
 [core]
 	pager = mise exec -- delta
