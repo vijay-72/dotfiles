@@ -45,6 +45,8 @@ unbind %
 bind C-p previous-window
 bind C-n next-window
 
+bind-key g display-popup -E -w 95% -h 95% -d "#{pane_current_path}" lazygit
+
 bind v copy-mode
 
 
@@ -79,6 +81,7 @@ set -g @tmux-dotbar-session-position "right"
 
 # resurrect + continuum
 set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-dir '~/.local/share/tmux/resurrect'
 set -g @continuum-restore 'on'
 set -g @continuum-save-interval '15'
 

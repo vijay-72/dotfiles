@@ -1,0 +1,50 @@
+[user]
+	name = Raswanth
+	email = raswanthvijai@gmail.com
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[rerere]
+	enabled = false
+
+[core]
+	pager = mise exec -- delta
+
+[interactive]
+	diffFilter = mise exec -- delta --color-only
+
+[merge]
+	conflictStyle = zdiff3
+
+[delta]
+	features = gruvmax-fang
+	navigate = true
+
+[delta "gruvmax-fang"]
+	dark = true
+	syntax-theme = gruvbox-dark
+	file-style = "#FFFFFF" bold
+	file-added-label = [+]
+	file-modified-label = [*]
+	file-removed-label = [-]
+	file-renamed-label = [->]
+	file-decoration-style = "#84786A" ul
+	hunk-header-style = omit
+	line-numbers = true
+	line-numbers-left-style = "#84786A"
+	line-numbers-right-style = "#84786A"
+	line-numbers-minus-style = "#A02A11"
+	line-numbers-plus-style = "#479B36"
+	line-numbers-zero-style = "#84786A"
+	line-numbers-left-format = " {nm:>3} │"
+	line-numbers-right-format = " {np:>3} │"
+	minus-style = syntax "#330011"
+	minus-emph-style = syntax "#80002a"
+	plus-style = syntax "#001a00"
+	plus-emph-style = syntax "#003300"
+	whitespace-error-style = "#FB4934" reverse
+	blame-format = "{author:>18} ({commit:>8}) {timestamp:<13} "
+	blame-palette = "#000000" "#1d2021" "#282828" "#3c3836"
+	merge-conflict-begin-symbol = ⌃
+	merge-conflict-end-symbol = ⌄

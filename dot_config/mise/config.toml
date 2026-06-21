@@ -1,4 +1,7 @@
 [tools]
+delta = "latest"
+java = "temurin-17"
+lazygit = "latest"
 lua-language-server = "latest"
 node = "22"
 "npm:@vtsls/language-server" = "latest"
