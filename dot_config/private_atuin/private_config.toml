@@ -49,7 +49,7 @@ filter_mode = "global"
 ## in any directory within a git repository tree (default: false).
 ##
 ## To use workspace mode by default when available, set this to true and
-## set filter_mode to "workspace" or leave it unspecified and 
+## set filter_mode to "workspace" or leave it unspecified and
 ## set search.filters to include "workspace" before other filter modes.
 # workspaces = false
 
@@ -271,4 +271,4 @@ name = "gruvbox-dark"
 # filters = [ "global", "host", "session", "workspace", "directory" ]
 
 [ui]
-columns = ["time", { type = "directory", width = 24 }, "command"]
+columns = ["duration", "time", "command"]
