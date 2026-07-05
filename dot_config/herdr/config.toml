@@ -1,0 +1,37 @@
+onboarding = false
+
+[theme]
+name = "gruvbox"
+auto_switch = false
+
+[keys]
+# Mirrors ~/.config/tmux/tmux.conf
+prefix = "ctrl+a"                                    # tmux: set -g prefix C-a
+
+detach = "prefix+d"                                  # tmux default detach (untouched in tmux.conf)
+reload_config = "prefix+r"                           # tmux: bind r source-file ...
+resize_mode = "prefix+shift+r"                        # freed up "r" for reload_config above
+goto = "prefix+t"                                    # tmux: bind-key t -> sesh fuzzy picker
+last_pane = "prefix+shift+l"                          # tmux: bind -N "last-session" L -> sesh last
+
+previous_tab = ["prefix+p", "prefix+ctrl+p"]         # tmux: default p + bind C-p previous-window
+next_tab = ["prefix+n", "prefix+ctrl+n"]             # tmux: default n + bind C-n next-window
+
+focus_pane_left = "prefix+h"                         # tmux: bind -r h select-pane -L
+focus_pane_down = "prefix+j"                         # tmux: bind -r j select-pane -D
+focus_pane_up = "prefix+k"                           # tmux: bind -r k select-pane -U
+focus_pane_right = "prefix+l"                        # tmux: bind -r l select-pane -R
+
+split_vertical = "prefix+v"                          # side-by-side, tmux: bind \ split-window -h
+split_horizontal = "prefix+minus"                    # stacked, tmux: bind - split-window -v
+
+close_pane = "prefix+x"
+zoom = "prefix+z"
+toggle_sidebar = "prefix+b"                          # closest built-in to tmux: bind b break-pane -d
+
+# tmux: bind-key g display-popup -E -w 95% -h 95% -d "#{pane_current_path}" lazygit
+[[keys.command]]
+key = "prefix+g"
+type = "pane"
+command = "lazygit"
+description = "lazygit"
