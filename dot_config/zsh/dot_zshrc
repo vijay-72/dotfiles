@@ -72,7 +72,7 @@ HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
 
 # History options
 setopt INC_APPEND_HISTORY     # Append to history immediately
-setopt HIST_IGNORE_SPACE      # Don't record commands that start with space
+unsetopt HIST_IGNORE_SPACE    # Record commands even when they start with space
 setopt HIST_FIND_NO_DUPS      # Don't show duplicates when searching
 setopt HIST_IGNORE_ALL_DUPS   # Remove older duplicate entries
 setopt HIST_SAVE_NO_DUPS      # Don't write duplicates to history file
@@ -211,6 +211,18 @@ command -v zoxide >/dev/null && eval "$(zoxide init --cmd cd zsh)"
 command -v fzf >/dev/null && source <(fzf --zsh)
 [[ -x "$HOME/.local/bin/mise" ]] && eval "$($HOME/.local/bin/mise activate zsh)"
 eval "$(atuin init zsh --disable-up-arrow)"
+
+# Atuin treats a leading space as "private history" by convention. Strip leading
+# whitespace before recording so accidental space-prefixed commands are saved.
+if (( ${+functions[_atuin_preexec]} )); then
+  functions[_atuin_orig_preexec]=$functions[_atuin_preexec]
+  _atuin_preexec() {
+    emulate -L zsh
+    setopt extended_glob
+    _atuin_orig_preexec "${1##[[:space:]]#}"
+  }
+fi
+
 # Load plugins in proper order
 
 [[ -f "$plugin_dir/fzf-tab/fzf-tab.plugin.zsh" ]] && \

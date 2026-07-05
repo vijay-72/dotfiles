@@ -1,0 +1,14 @@
+[theme]
+name = "gruvbox-dark"
+parent = "default"
+
+[colors]
+AlertInfo = "#98971a"
+AlertWarn = "#fabd2f"
+AlertError = "#d65d0e"
+Annotation = "#83a598"
+Base = "#fbf1c7"
+Guidance = "#928374"
+Important = "#d79921"
+Title = "#83a598"
+Muted = "#928374"
